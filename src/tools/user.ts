@@ -3,22 +3,7 @@ import { z } from "zod";
 import { marketingFetch, getAllPages } from "../fb-client.js";
 
 export function registerUserTools(server: McpServer): void {
-  // 1. get_me — uses USER_TOKEN for System User compatibility
-  server.tool(
-    "get_me",
-    "Get the authenticated user/system user profile information",
-    {},
-    async () => {
-      try {
-        const result = await marketingFetch(`/me?fields=id,name`);
-        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-      } catch (e: unknown) {
-        return { content: [{ type: "text", text: String(e) }], isError: true };
-      }
-    }
-  );
-
-  // 2. list_accounts — uses USER_TOKEN for /me/accounts
+  // 1. list_accounts — uses USER_TOKEN for /me/accounts
   server.tool(
     "list_accounts",
     "List Pages the authenticated user manages (with access tokens)",
