@@ -111,33 +111,6 @@ export function registerPageTools(server: McpServer): void {
     }
   );
 
-  // 6. search_pages
-  server.tool(
-    "search_pages",
-    "Search for public Facebook Pages by query using the Graph API search endpoint",
-    {
-      query: z.string().describe("Search query"),
-      limit: z.number().optional().default(25).describe("Number of results (default 25)"),
-      after: z.string().optional().describe("Pagination cursor (after)"),
-      before: z.string().optional().describe("Pagination cursor (before)"),
-    },
-    async (params) => {
-      try {
-        const qs = new URLSearchParams();
-        qs.set("q", params.query);
-        qs.set("type", "page");
-        qs.set("fields", "id,name,category,link,location,fan_count");
-        if (params.limit) qs.set("limit", String(params.limit));
-        if (params.after) qs.set("after", params.after);
-        if (params.before) qs.set("before", params.before);
-        const result = await fbFetch(`/search?${qs}`);
-        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
-      } catch (e: unknown) {
-        return { content: [{ type: "text", text: String(e) }], isError: true };
-      }
-    }
-  );
-
   // 7. subscribe_app
   server.tool(
     "subscribe_app",
